@@ -12,7 +12,7 @@ def getKey():
     global TOKEN
     global client
 
-    with open("data.txt", "r") as f1:
+    with open("lib/data.txt", "r") as f1:
         contents1 = f1.read()
         if " | " not in contents1:
             f1.close()

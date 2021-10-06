@@ -5,7 +5,7 @@ from tkinter.messagebox import showinfo
 from tkinter import *
 import time
 
-import getTrelloData as getApi
+from lib import getTrelloData as getApi
 
 
 root = tk.Tk()
@@ -69,7 +69,7 @@ def execute():
         entry.pack(ipadx=10, ipady=10, padx = 10)
         btnToken['text'] = 'SAVE TOKEN'
     else:
-        with open("data.txt", "w") as f2:
+        with open("lib/data.txt", "w") as f2:
             f2.write(entry.get())
         f2.close()
         entry.pack_forget()
