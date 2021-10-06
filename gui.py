@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter.messagebox import showinfo
 from tkinter import *
+import time
 
 import getTrelloData as getApi
 
@@ -12,6 +13,7 @@ root.geometry('500x350')
 root.resizable(False, False)
 root.title('Trello Application')
 save = False
+isExport = False
 
 def success_popup():
    top= Toplevel(root)
@@ -32,14 +34,33 @@ def UploadAction(event=None):
         print (f1.read())
     f1.close()
 
+    getApi.create_list("GTtrIMUe","Kaki")
+
+def runGetData():
+    global isExport
+    if isExport == False:
+        isExport = True
+        text = StringVar()
+        l = Label(root, textvariable=text, fg='blue', font=(".VnMonotype corsiva", 15))
+        l.pack(ipadx=10, ipady=10, padx = 10)
+        text.set('Exportinggg.....Please wait!!!')
+        btnExport["state"] = "disabled"
+        btnToken["state"] = "disabled"
+        root.update()
+        time.sleep(2)
+        l.destroy()
+        btnExport["state"] = "normal"
+        btnToken["state"] = "normal"
+        result = getApi.getData()
+        if (result == 0):
+            success_popup()
+        elif (result == 1):
+            error1_popup()
+        else:
+            error2_popup()
+        isExport = False
 def getData():
-    result = getApi.getData()
-    if (result == 0):
-        success_popup()
-    elif (result == 1):
-        error1_popup()
-    else:
-        error2_popup()
+    runGetData()
 
 def execute():
     global save
@@ -70,6 +91,7 @@ btnImport = ttk.Button (
     command=UploadAction
 )
 btnImport.pack(ipadx=10, ipady=10, padx = 10)
+btnImport["state"] = "disabled"
 
 btnExport = ttk.Button (
     root,
