@@ -1,6 +1,7 @@
 from trello import TrelloClient
 import pandas as pd
 import requests
+from lib import uploadTrelloData as ul
 
 API_KEY = ""
 TOKEN = ""
@@ -14,11 +15,11 @@ def getKey():
 
     with open("lib/data.txt", "r") as f1:
         contents1 = f1.read()
-        if " | " not in contents1:
+        if "-" not in contents1:
             f1.close()
             return 1
-        API_KEY = contents1.split(" | ")[0]
-        TOKEN = contents1.split(" | ")[1]
+        API_KEY = contents1.split("-")[0]
+        TOKEN = contents1.split("-")[1]
 
         client = TrelloClient(
             api_key = API_KEY,
@@ -74,5 +75,9 @@ def getData():
         except Exception as e2:
             return 2
         return 0
+
+def uploadData():
+    getKey()
+    return ul.readDataFromCsv(API_KEY, TOKEN)
 
 
