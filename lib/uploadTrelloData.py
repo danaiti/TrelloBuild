@@ -28,6 +28,18 @@ def create_card(key, token, list_id, card_name):
     card_id = response.json()["id"]
     return card_id
 
+def uploadAttach(key, token, card_id, img_url):
+    try:
+        querystring = {"key": key, "token": token}
+        files = {
+            'file': (img_url, open(img_url, 'rb')),
+        }
+
+        requests.post('https://api.trello.com/1/cards/%s/attachments' % card_id, params=querystring, files=files)
+    except Exception as e:
+        print('Loi attach')
+
+
 def readDataFromCsv(key, token):
     try:
         board_id = create_board(key, token)
@@ -36,12 +48,16 @@ def readDataFromCsv(key, token):
             listName = 'fakeList'
             cardName = 'fakeCard'
             for row in csv_reader:
-                if row[0] != '':
+                if row[0] != '' and row[1]!='':
                     listName = row[0]
                     list_id = create_list(key, token, board_id, listName)
-                    create_card(key, token, list_id, row[1])
+                    card_id = create_card(key, token, list_id, row[1])
+                    if (row[2] != ''):
+                        uploadAttach(key, token, card_id, row[2])
                 elif row[1] != '':
-                    create_card(key, token, list_id, row[1])
+                    card_id = create_card(key, token, list_id, row[1])
+                    if (row[2] != ''):
+                        uploadAttach(key, token, card_id, row[2])
         return board_id
     except Exception as e:
         return "err"

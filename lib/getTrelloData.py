@@ -58,17 +58,18 @@ def getData():
         try:
             for myboard in all_boards:
                 print(myboard)
-                for list in myboard.all_lists():
-                    for card in list.list_cards():
-                        #here
-                        hasAtt = False
-                        for atc in card.attachments:
-                            hasAtt = True
-                            attach.append(atc.get('url'))
+                if "_ignore" not in myboard:
+                    for list in myboard.all_lists():
+                        for card in list.list_cards():
+                            #here
+                            hasAtt = False
+                            for atc in card.attachments:
+                                hasAtt = True
+                                attach.append(atc.get('url'))
 
-                        if(hasAtt):
-                            nameCard.append(card.name)
-                            nameList.append(list.name)
+                            if(hasAtt):
+                                nameCard.append(card.name)
+                                nameList.append(list.name)
 
             df = pd.DataFrame({'Product Name':nameCard, 'Img': attach, 'Product Type': nameList})
             df.to_csv('products.csv', index=False, encoding='utf-8')

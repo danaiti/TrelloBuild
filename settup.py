@@ -1,6 +1,6 @@
 from cx_Freeze import setup, Executable
 import sys
-base = None    
+base = None
 
 include_files = ['lib']
 
@@ -10,7 +10,7 @@ executables = [Executable("trelloApp.py", base=base)]
 
 packages = ["idna"]
 options = {
-    'build_exe': {    
+    'build_exe': {
         'packages':packages,
         'include_files':include_files,
     },

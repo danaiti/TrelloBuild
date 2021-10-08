@@ -98,7 +98,6 @@ def execute():
         setText('Start change Token')
         setText('Please input your api key and token')
         entry.place(x=30,y=260,width=533,height=30)
-        entry.insert(0, "Insert api key and token here!")
         btnCancel.place(x=30,y=320,width=129,height=39)
         btnToken['text'] = 'SAVE TOKEN'
     else:
