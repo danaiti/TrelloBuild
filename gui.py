@@ -5,6 +5,7 @@ from tkinter.messagebox import showinfo
 from tkinter import *
 import tkinter.font as tkFont
 import time
+import os
 
 from lib import getTrelloData as getApi
 
@@ -17,19 +18,19 @@ isExport = False
 
 def success_popup():
    top= Toplevel(root)
-   Label(top, text= "Finish successfully ! \n Get data finish, please check !", font=('Arial 10')).place(x=10,y=80)
+   Label(top, text= "Finish successfully !" + os.linesep + "Get data finish, please check !", font=('Arial 10')).place(x=10,y=80)
 
 def import_success():
    top= Toplevel(root)
-   Label(top, text= "Finish successfully ! \n Import data finish, please check !", font=('Arial 10')).place(x=10,y=80)
+   Label(top, text= "Finish successfully !" + os.linesep + "Import data finish, please check !", font=('Arial 10')).place(x=10,y=80)
 
 def error1_popup():
    top= Toplevel(root)
-   Label(top, text= "Error! \n Please check your token!!", font=('Arial 10')).place(x=10,y=80)
+   Label(top, text= "Error!" + os.linesep + "Please check your token!!", font=('Arial 10')).place(x=10,y=80)
 
 def error2_popup():
    top= Toplevel(root)
-   Label(top, text= "Error! \n Unexpected error occur!!", font=('Arial 10')).place(x=10,y=80)
+   Label(top, text= "Error!" + os.linesep + "Unexpected error occur!!", font=('Arial 10')).place(x=10,y=80)
 
 def UploadAction(event=None):
     fileName = filedialog.askopenfilename()
@@ -53,7 +54,7 @@ def UploadAction(event=None):
 def setText(textContent):
     processLine.configure(state="normal")
     processLine.insert("end", textContent)
-    processLine.insert("end", "\n")
+    processLine.insert("end", os.linesep)
     processLine.configure(state="disable")
     root.update()
 
@@ -101,7 +102,7 @@ def execute():
         btnCancel.place(x=30,y=320,width=129,height=39)
         btnToken['text'] = 'SAVE TOKEN'
     else:
-        with open("lib/data.txt", "w") as f2:
+        with open("lib"+os.path.sep+"data.txt", "w") as f2:
             f2.write(entry.get())
         f2.close()
         entry.delete(0, 'end')
