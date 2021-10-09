@@ -40,10 +40,13 @@ def uploadAttach(key, token, card_id, img_url):
         print('Loi attach')
 
 
-def readDataFromCsv(key, token):
+def readDataFromCsv(fileName,idBoard, key, token):
     try:
-        board_id = create_board(key, token)
-        with open("dataImport.csv", "r") as f1:
+        if idBoard == '':
+            board_id = create_board(key, token)
+        else:
+            board_id = idBoard
+        with open(fileName, "r") as f1:
             csv_reader = reader(f1)
             listName = 'fakeList'
             cardName = 'fakeCard'

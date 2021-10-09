@@ -77,8 +77,8 @@ def getData():
             return 2
         return 0
 
-def uploadData():
+def uploadData(fileName,idBoard):
     getKey()
-    return ul.readDataFromCsv(API_KEY, TOKEN)
+    return ul.readDataFromCsv(fileName,idBoard,API_KEY, TOKEN)
 
 

@@ -14,6 +14,8 @@ root.geometry('600x400')
 root.resizable(False, False)
 root.title('Trello Application')
 save = False
+importFlag = False
+fileName = ''
 isExport = False
 
 def success_popup():
@@ -32,25 +34,6 @@ def error2_popup():
    top= Toplevel(root)
    Label(top, text= "Error!" + os.linesep + "Unexpected error occur!!", font=('Arial 10')).place(x=10,y=80)
 
-def UploadAction(event=None):
-    fileName = filedialog.askopenfilename()
-
-    with open(fileName, "r") as f1:
-        print (f1.read())
-    f1.close()
-    setButtonState("disabled")
-    root.update()
-    setText("Start import data...")
-    board_id = getApi.uploadData()
-    if board_id == "err":
-        error2_popup()
-        setText("Import data error!")
-    else:
-        setText("Import finish. Check product imported at:")
-        setText("https://trello.com/b/" + board_id)
-        setButtonState("normal")
-        import_success()
-
 def setText(textContent):
     processLine.configure(state="normal")
     processLine.insert("end", textContent)
@@ -59,9 +42,42 @@ def setText(textContent):
     root.update()
 
 def setButtonState(state):
-        btnExport["state"] = state
-        btnToken["state"] = state
-        btnImport["state"] = state
+    btnExport["state"] = state
+    btnToken["state"] = state
+    btnImport["state"] = state
+
+def UploadAction(event=None):
+    global importFlag
+    if importFlag == False:
+        global fileName
+        fileName = filedialog.askopenfilename()
+        if fileName == '':
+            return 0
+        importFlag = True
+        setText('Please input your board_id (if needed)')
+        entry.delete(0, 'end')
+        entry.place(x=30,y=260,width=533,height=30)
+        btnCancel.place(x=30,y=320,width=129,height=39)
+        btnImport['text'] = 'START IMPORT'
+    else:
+        idBoard = entry.get()
+        setButtonState("disabled")
+        root.update()
+        setText("Start import data...")
+        entry.place_forget()
+        btnCancel.place_forget()
+        root.update()
+        board_id = getApi.uploadData(fileName,idBoard)
+        if board_id == "err":
+            error2_popup()
+            setText("Import data error!")
+        else:
+            setText("Import finish. Check product imported at:")
+            setText("https://trello.com/b/" + board_id)
+            import_success()
+        setButtonState("normal")
+        btnImport['text'] = 'IMPORT DATA'
+        importFlag = False
 
 def runGetData():
     global isExport
@@ -97,6 +113,7 @@ def execute():
         save = True
         setText('Start change Token')
         setText('Please input your api key and token')
+        entry.delete(0, 'end')
         entry.place(x=30,y=260,width=533,height=30)
         btnCancel.place(x=30,y=320,width=129,height=39)
         btnToken['text'] = 'SAVE TOKEN'
@@ -104,7 +121,6 @@ def execute():
         with open("lib"+os.path.sep+"data.txt", "w") as f2:
             f2.write(entry.get())
         f2.close()
-        entry.delete(0, 'end')
         entry.place_forget()
         btnCancel.place_forget()
         btnToken['text'] = 'CHANGE TOKEN'
@@ -112,14 +128,23 @@ def execute():
         setText('Save token successfully!!')
 
 def cancel():
-    btnCancel.place_forget()
-    entry.delete(0, 'end')
-    entry.place_forget()
-    btnToken['text'] = 'CHANGE TOKEN'
-    global save
-    save = False
-    setText('Cancel change successfully!!')
-    return 0
+    global importFlag, save
+    if save == True:
+        btnCancel.place_forget()
+        entry.delete(0, 'end')
+        entry.place_forget()
+        btnToken['text'] = 'CHANGE TOKEN'
+        save = False
+        setText('Cancel change successfully!!')
+        return 0
+    elif importFlag == True:
+        btnCancel.place_forget()
+        entry.delete(0, 'end')
+        entry.place_forget()
+        btnImport['text'] = 'IMPORT DATA'
+        importFlag = False
+        setText('Cancel import successfully!!')
+        return 0
 # label with a specific font
 label = ttk.Label(
     root,
@@ -158,7 +183,7 @@ btnToken.place(x=30,y=200,width=134,height=42)
 
 btnCancel = ttk.Button (
     root,
-    text = "CANCEL CHANGE",
+    text = "CANCEL",
     width= 30,
     command=lambda:[cancel()]
 )
