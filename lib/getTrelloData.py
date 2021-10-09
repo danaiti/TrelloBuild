@@ -1,4 +1,4 @@
-from trello import TrelloClient
+from trello import TrelloClient, board
 import pandas as pd
 import requests
 from lib import uploadTrelloData as ul
@@ -57,8 +57,9 @@ def getData():
         attach = []
         try:
             for myboard in all_boards:
-                print(myboard)
-                if "_ignore" not in myboard:
+                name = myboard.name
+                if "_ignore" not in name:
+                    print ("Export from board: " + name)
                     for list in myboard.all_lists():
                         for card in list.list_cards():
                             #here
@@ -66,14 +67,16 @@ def getData():
                             for atc in card.attachments:
                                 hasAtt = True
                                 attach.append(atc.get('url'))
-
                             if(hasAtt):
                                 nameCard.append(card.name)
                                 nameList.append(list.name)
-
+                else:
+                    print ("===> Ignore")
+                    continue
             df = pd.DataFrame({'Product Name':nameCard, 'Img': attach, 'Product Type': nameList})
             df.to_csv('products.csv', index=False, encoding='utf-8')
         except Exception as e2:
+            print (e2)
             return 2
         return 0
 

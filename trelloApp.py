@@ -53,6 +53,7 @@ def UploadAction(event=None):
         fileName = filedialog.askopenfilename()
         if fileName == '':
             return 0
+        setText ('File choosen:' + fileName)
         importFlag = True
         setText('Please input your board_id (if needed)')
         entry.delete(0, 'end')
