@@ -1,12 +1,10 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, Label, Toplevel, StringVar
 from tkinter import filedialog
 from tkinter.messagebox import showinfo
-from tkinter import *
 import tkinter.font as tkFont
 import time
 import os
-
 from lib import getTrelloData as getApi
 
 root = tk.Tk()
